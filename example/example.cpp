@@ -6,13 +6,7 @@
 
 #include "pico_ws_server/web_socket_server.h"
 
-
-
 #define UART_ID uart_get_instance(PICO_DEFAULT_UART)
-#define BAUD_RATE 115200
-#define DATA_BITS 8
-#define STOP_BITS 1
-#define PARITY    UART_PARITY_NONE
 
 // We are using pins 0 and 1, but see the GPIO function select table in the
 // datasheet for information on which other pins can be used.
@@ -135,7 +129,7 @@ int main() {
     if (uart_rx_has_data) {
       uart_rx_has_data = false;
       char tmp_buf[UART_RX_BUFFER_SIZE + 1];
-      char * tmp_buf_ptr = tmp_buf;
+      char *tmp_buf_ptr = tmp_buf;
       while(uart_data_in_recieve_buffer()) {
           *(tmp_buf_ptr++) = uart_receive_byte();
       }
