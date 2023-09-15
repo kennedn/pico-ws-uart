@@ -6,6 +6,8 @@
 #include "cyw43_config.h"
 #include "lwip/pbuf.h"
 #include "lwip/tcp.h"
+#include "hardware/uart.h"
+
 
 #include "web_socket_message.h"
 #include "web_socket_server_internal.h"

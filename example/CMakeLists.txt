@@ -28,8 +28,13 @@ target_link_libraries(example
 )
 
 target_compile_definitions(example PRIVATE
+  PICO_DEFAULT_UART_TX_PIN=0
+  PICO_DEFAULT_UART_RX_PIN=1
+  PICO_DEFAULT_UART=0
+  PICO_DEFAULT_UART_BAUD_RATE=9600
   WIFI_SSID=\"${WIFI_SSID}\"
   WIFI_PASSWORD=\"${WIFI_PASSWORD}\"
+  DEBUG=1
   )
 
 pico_add_extra_outputs(example)
