@@ -1,9 +1,6 @@
 #include <stdio.h>
-
 #include "pico/stdlib.h"
-
 #include "pico/cyw43_arch.h"
-
 #include "pico_ws_server/web_socket_server.h"
 
 #define UART_ID uart_get_instance(PICO_DEFAULT_UART)
@@ -23,8 +20,6 @@ static unsigned char uart_rx_buffer[UART_RX_BUFFER_SIZE];
 static volatile unsigned char uart_rx_head;
 static volatile unsigned char uart_rx_tail;
 static volatile bool uart_rx_has_data;
-uint32_t s_conn_id;
-WebSocketServer s_server;
 
 void uart_flush_rx_buffer(void) {
     uart_rx_head = 0;
@@ -72,7 +67,6 @@ void uart_rx_isr() {
 void on_connect(WebSocketServer& server, uint32_t conn_id) {
   printf("WebSocket opened\n");
   server.sendMessage(conn_id, "hello");
-  s_conn_id = conn_id;
 }
 
 void on_disconnect(WebSocketServer& server, uint32_t conn_id) {
@@ -99,11 +93,13 @@ int main() {
   do {} while(cyw43_arch_wifi_connect_timeout_ms(WIFI_SSID, WIFI_PASSWORD, CYW43_AUTH_WPA2_AES_PSK, 30000));
   printf("Connected.\n");
 
-  s_server.setConnectCallback(on_connect);
-  s_server.setCloseCallback(on_disconnect);
-  s_server.setMessageCallback(on_message);
+  WebSocketServer server(2);
 
-  bool server_ok = s_server.startListening(80);
+  server.setConnectCallback(on_connect);
+  server.setCloseCallback(on_disconnect);
+  server.setMessageCallback(on_message);
+
+  bool server_ok = server.startListening(80);
   if (!server_ok) {
     printf("Failed to start WebSocket server\n");
     while (1) tight_loop_contents();
@@ -134,7 +130,8 @@ int main() {
           *(tmp_buf_ptr++) = uart_receive_byte();
       }
       *tmp_buf_ptr = '\0';
-      s_server.sendMessage(s_conn_id, tmp_buf);
+
+      server.sendMessageAll(tmp_buf);
     }
   }
 }
