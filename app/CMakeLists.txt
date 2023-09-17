@@ -15,6 +15,7 @@ target_include_directories(lwipopts_provider INTERFACE ${CMAKE_CURRENT_LIST_DIR}
 
 add_executable(pico-ws-uart
   src/pico-ws-uart.cpp
+  # src/uart_rx.h
 )
 
 target_link_libraries(pico-ws-uart
