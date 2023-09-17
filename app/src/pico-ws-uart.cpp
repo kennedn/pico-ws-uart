@@ -4,12 +4,10 @@
 #include "pico_ws_server/web_socket_server.h"
 #include "uart_rx.h"
 
+uint32_t sw_timer;
 WebSocketServer server(2);
+UART_RX* UART_RX::uart_rx = nullptr;
 UART_RX& uart = UART_RX::getInstance();
-
-extern "C" void UART_ISR() {
-    uart.interruptHandler();
-}
 
 void on_connect(WebSocketServer& server, uint32_t conn_id) {
   printf("WebSocket opened\n");
@@ -31,6 +29,8 @@ void on_uart(const char *payload) {
 }
 
 int main() {
+  sw_timer = 0;
+
   stdio_init_all();
 
   if (cyw43_arch_init() != 0) {
@@ -59,7 +59,7 @@ int main() {
   
 
   // // And set up and enable the interrupt handlers
-  irq_set_exclusive_handler(uart.get_irq(), UART_ISR);
+  irq_set_exclusive_handler(uart.get_irq(), uart.interruptHandler);
   irq_set_enabled(uart.get_irq(), true);
 
   uart.enable_irq();
@@ -68,6 +68,10 @@ int main() {
 
   while (1) {
     cyw43_arch_poll();
-    uart.buffer_to_callback(on_uart);
+    // Every 10ms
+    if ((to_ms_since_boot(get_absolute_time()) - sw_timer) > 100) {
+      uart.buffer_to_cstring(on_uart);
+      sw_timer = to_ms_since_boot(get_absolute_time());
+    }
   }
 }
