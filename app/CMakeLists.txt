@@ -7,10 +7,6 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_library(lwipopts_provider INTERFACE)
 target_include_directories(lwipopts_provider INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include)
-target_link_libraries(lwipopts_provider INTERFACE
-  pico_cyw43_arch_lwip_poll
-)
-
 target_compile_definitions(lwipopts_provider INTERFACE
   NDEBUG=1
 )
@@ -22,6 +18,7 @@ add_executable(pico-ws-uart
 
 target_link_libraries(pico-ws-uart
   pico_stdlib
+  pico_cyw43_arch_lwip_poll
   pico_ws_server
 )
 
