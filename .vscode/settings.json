@@ -6,6 +6,7 @@
         "cstdlib": "c",
         "system_error": "c",
         "tcp.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "stdexcept": "cpp"
     }
 }

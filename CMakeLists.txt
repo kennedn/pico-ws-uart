@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 set(PICO_BOARD pico_w)
+set(PICO_CXX_ENABLE_EXCEPTIONS 1)
 
 include(pico_sdk_import.cmake)
 
