@@ -9,6 +9,7 @@ add_library(lwipopts_provider INTERFACE)
 target_include_directories(lwipopts_provider INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include)
 target_compile_definitions(lwipopts_provider INTERFACE
   NDEBUG=1
+  CYW43_HOST_NAME "LG_TV"
 )
 
 add_executable(pico-ws-uart
@@ -32,6 +33,7 @@ target_compile_definitions(pico-ws-uart PRIVATE
   AWAIT_TIMER_MS=100
   RX_BUFFER_SIZE=32
   MAX_WS_CONNECTIONS=2
+  ENABLE_DEBUG=1
   )
 
 pico_add_extra_outputs(pico-ws-uart)
