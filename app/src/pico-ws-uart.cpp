@@ -12,7 +12,6 @@ uint32_t sw_timer;
 
 void on_connect(WebSocketServer& server, uint32_t conn_id) {
   DEBUG("WebSocket opened");
-  server.sendMessage(conn_id, "hello");
 }
 
 void on_disconnect(WebSocketServer& server, uint32_t conn_id) {

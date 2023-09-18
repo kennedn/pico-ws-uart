@@ -8,8 +8,9 @@ set(CMAKE_CXX_STANDARD 17)
 add_library(lwipopts_provider INTERFACE)
 target_include_directories(lwipopts_provider INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include)
 target_compile_definitions(lwipopts_provider INTERFACE
-  NDEBUG=1
-  CYW43_HOST_NAME "LG_TV"
+  CYW43_HOST_NAME=\"LG_TV\"
+  PICO_WS_SERVER_STATIC_HTML_HEX=\"${PICO_WS_SERVER_STATIC_HTML_HEX}\"
+  ENABLE_DEBUG=1
 )
 
 add_executable(pico-ws-uart

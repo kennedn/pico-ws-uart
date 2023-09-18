@@ -25,6 +25,7 @@ static constexpr const char EXPECTED_PATH[] = "/ ";
 static constexpr const char EXPECTED_PROTOCOL[] = "HTTP/1.1\r\n";
 static constexpr const char EXPECTED_HEADER_UPGRADE[] = "Upgrade: websocket";
 static constexpr const char EXPECTED_HEADER_CONNECTION[] = "Connection: Upgrade";
+static constexpr const char EXPECTED_HEADER_CONNECTION_FIREFOX[] = "Connection: keep-alive, Upgrade";
 static constexpr const char EXPECTED_HEADER_WS_VERSION[] = "Sec-WebSocket-Version: 13";
 static constexpr const char EXPECTED_HEADER_NAME_WS_KEY[] = "Sec-WebSocket-Key: ";
 static constexpr auto WS_KEY_BASE64_MAX = 24;
@@ -195,6 +196,9 @@ bool HTTPHandler::processHeader(const char* header) {
     has_upgrade_header = true;
   }
   if (!strcmp(header, EXPECTED_HEADER_CONNECTION)) {
+    has_connection_header = true;
+  }
+  if (!strcmp(header, EXPECTED_HEADER_CONNECTION_FIREFOX)) {
     has_connection_header = true;
   }
   if (!strcmp(header, EXPECTED_HEADER_WS_VERSION)) {
