@@ -1,6 +1,6 @@
 # pico-ws-uart
 
-A Pi Pico W WebSocket to UART bridge. Permits serial communication with a device over WebSocket.
+A WebSocket to UART bridge on the PicoW. Permits serial communication with a device over WebSocket.
 
 ## Building
 
