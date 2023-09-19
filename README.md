@@ -21,7 +21,7 @@ Run cmake
 cmake .. -DWIFI_SSID="YOUR_WIFI_SSID" -DWIFI_PASSWORD="YOU_WIFI_PASSWORD"
 ```
 
-Compile the appliction
+Compile the application
 ```shell
 cd app
 make -j 4
