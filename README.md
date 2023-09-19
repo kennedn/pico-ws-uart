@@ -1,24 +1,44 @@
-# pico-ws-server
-WebSockets server implementation for Raspberry Pi Pico W on top of raw lwIP
+# pico-ws-uart
+
+A Pi Pico W WebSocket to UART bridge. Permits serial communication with a device over WebSocket.
 
 ## Building
-Users of this library must provide a CMake library named `lwipopts_provider` which provides the `lwipopts.h` header for lwIP configuration.
 
-Users must also link this library with an implementation of `pico_cyw43_arch` (e.g. `pico_cyw43_arch_lwip_poll`).
+Clone repository and cd
+```shell
+git clone https://github.com/kennedn/pico-ws-uart.git
+cd pico-ws-uart
+```
 
-Warning: the `pico_cyw43_arch` implementation must allow standard library functions (including `malloc`/`free`) to be called from network workers. This means `pico_cyw43_arch_lwip_threadsafe_background` must _not_ be used, since it executes workers within ISRs.
+Make build folder and cd
+```shell
+mkdir build
+cd build
+```
 
-## Security
-This server does not currently support HTTPS/WSS
+Run cmake
+```shell
+cmake .. -DWIFI_SSID="YOUR_WIFI_SSID" -DWIFI_PASSWORD="YOU_WIFI_PASSWORD"
+```
 
-## HTTP Notes
-This does not aim to be a general-purpose HTTP server, and only includes minimal HTTP support for the WebSocket handshake. Only `GET / HTTP/1.1` requests are allowed, all other requests will return status `400`/`404`/`405`.
+Compile the appliction
+```shell
+cd app
+make -j 4
+```
 
-Valid requests which do not request a WebSocket upgrade will be served a static HTML blob. This is defined at compile time via CMake, using `PICO_WS_SERVER_STATIC_HTML_HEX` ([see example](example/CMakeLists.txt)).
+## Usage
 
-## Performance Notes
-No benchmarking has been done, but this server is expected to have a small memory footprint and low response latency. However, there is likely room for performance improvement when it comes to processing large payloads.
+By default the uart config is `UART_0` with `pin_0 = tx` and `pin_1 = rx`.
 
-Some low hanging fruit for future improvement:
-* Process payload bytes in bulk
-* Provide interface to consume chunked messages, without copying into a continuous buffer
+> NOTE: UART configuration and Debug information can be configured in the apps [CMakeLists.txt](./app/CMakeLists.txt)
+
+When the device receives a message from a client, it will echo it on the `tx` pin. When UART data is received on the `rx` pin, it will be sent as a message to all connected WebSocket clients.
+
+Client connections to the server that do not request a WebSocket upgrade (e.g Web Browsers) will be served a static HTML webpage that allows basic interaction with the websocket:
+
+![](./media/static-http-example.gif)
+
+## Thanks
+
+Thanks to [cadouthat](https://github.com/cadouthat) for the amazing [pico-ws-server](https://github.com/cadouthat/pico-ws-server) library.

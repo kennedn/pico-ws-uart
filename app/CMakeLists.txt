@@ -10,7 +10,8 @@ target_include_directories(lwipopts_provider INTERFACE ${CMAKE_CURRENT_LIST_DIR}
 target_compile_definitions(lwipopts_provider INTERFACE
   CYW43_HOST_NAME=\"LG_TV\"
   PICO_WS_SERVER_STATIC_HTML_HEX=\"${PICO_WS_SERVER_STATIC_HTML_HEX}\"
-  ENABLE_DEBUG=1
+  ENABLE_DEBUG=1      # pico-ws-server enable debug logging
+  # NDEBUG=1          # LWIP disable debug logging
 )
 
 add_executable(pico-ws-uart
@@ -34,7 +35,8 @@ target_compile_definitions(pico-ws-uart PRIVATE
   AWAIT_TIMER_MS=100
   RX_BUFFER_SIZE=32
   MAX_WS_CONNECTIONS=2
-  ENABLE_DEBUG=1
+  WIFI_STATUS_POLL_MS=10000
+  ENABLE_DEBUG=1    # pico-ws-uart enable debug logging
   )
 
 pico_add_extra_outputs(pico-ws-uart)

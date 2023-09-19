@@ -43,9 +43,27 @@
         }
         
         #seperator {
-            height: 0.1vh;
+            height: 0.15vh;
             background-color: #31dcd6;
             margin: 1vh 0;
+        }
+
+        /* Mobile-friendly adjustments */
+        @media (max-width: 768px) {
+            #terminal {
+                padding: 2vh;
+                height: calc(var(--vh, 1vh) * 100);
+            }
+            pre {
+                font-size: 4vh;
+            }
+            input {
+                font-size: 4vh;
+            }
+            #seperator {
+                height: 0.2vh;
+                margin: 2vh 0;
+            }
         }
     </style>
 </head>
@@ -60,6 +78,17 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            document.addEventListener('resize', () => {
+                // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+                let vh = window.innerHeight * 0.01;
+                // Then we set the value in the --vh custom property to the root of the document
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            });
+            // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+            let vh = window.innerHeight * 0.01;
+            // Then we set the value in the --vh custom property to the root of the document
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+
             const socket = new WebSocket(`ws://${window.location.hostname}/`);
 
             const outputElement = document.getElementById('output');
@@ -104,6 +133,7 @@
             // Handle user input
             inputElement.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter') {
+                    event.preventDefault();
                     const command = inputElement.value;
                     // Remove double escapes and encode as an ArrayBuffer to prevent websocket from re-adding double escapes
                     // Allows for escape characters such as \r and \n to be sent down the wire unmolested
@@ -111,17 +141,23 @@
                     displayMessage(command, true);
                     inputElement.value = '';
                 } else if (event.key === 'ArrowUp') {
+                    event.preventDefault();
                     if (bufferIndex > 0) {
                         bufferIndex--;
                         inputElement.value = buffer[bufferIndex];
+                        inputElement.focus(); 
+                        inputElement.setSelectionRange(inputElement.value.length, inputElement.value.length) // Cursor to end
                     }
                 } else if (event.key === 'ArrowDown') {
+                    event.preventDefault();
                     if (bufferIndex < buffer.length - 1) {
                         bufferIndex++;
                         inputElement.value = buffer[bufferIndex];
+                        inputElement.focus(); 
+                        inputElement.setSelectionRange(inputElement.value.length, inputElement.value.length) // Cursor to end
                     } else {
                         bufferIndex = buffer.length;
-                        inputElement.value = '';
+                        inputElement.value = '';   
                     }
                 }
             });
