@@ -12,7 +12,9 @@ class UART_RX {
 
     void putc(char c);
     char getc();
+    
     void enable();
+
     void setUARTCallback(UARTCallback cb);
     void pollForData();
 
@@ -33,10 +35,9 @@ class UART_RX {
     ~UART_RX();
 
     static void interruptHandler();
-    static int64_t timer_callback(alarm_id_t alarm_id, void *user_data);
+    void interruptHandler_();
 
     unsigned char receive_byte(void);
     unsigned char data_in_recieve_buffer(void);
-    void interruptHandler_();
 };
 #endif

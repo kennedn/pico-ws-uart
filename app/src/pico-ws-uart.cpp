@@ -25,7 +25,7 @@ void on_message(WebSocketServer& server, uint32_t conn_id, const void* data, siz
 }
 
 void on_uart(const char *payload) {
-  server.sendMessageAll(payload);
+  server.broadcastMessage(payload);
 }
 
 int main() {

@@ -96,27 +96,21 @@ unsigned char UART_RX::data_in_recieve_buffer(void) {
 
 void UART_RX::interruptHandler_() {
     rx_has_data = false;
-    if (!awaiting_timer) {
-        awaiting_timer = true;
-        add_alarm_in_ms(AWAIT_TIMER_MS, timer_callback, this, false);
-    }
     unsigned char tmphead;
+    char c;
 
     tmphead = (rx_head + 1) & rx_buf_mask;  // Calculate buffer index
-
-    if (tmphead == rx_tail) {
-        uart_getc(id);  // Circular buffer is full, Drop character
-    } else {
+    c = uart_getc(id);
+    if (tmphead != rx_tail) {
         rx_head = tmphead;
-        rx_buf[tmphead] = uart_getc(id);
+        rx_buf[tmphead] = c;
     }
-}
 
-int64_t UART_RX::timer_callback(alarm_id_t alarm_id, void *user_data) {
-    UART_RX *uart = (UART_RX *)user_data;
-    if (!uart_is_readable(uart->id)) {
-        uart->rx_has_data = true;
+#ifdef CONTROL_CHAR
+    if (c == CONTROL_CHAR) {
+#else
+    if (!uart_is_readable(id)) {
+#endif
+        rx_has_data = true;
     }
-    uart->awaiting_timer = false;
-    return 0;
 }

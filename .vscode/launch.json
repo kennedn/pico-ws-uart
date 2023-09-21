@@ -11,12 +11,7 @@
             "gdbPath" : "gdb-multiarch",
             "gdbTarget": "auxpi.int:3333",
             "svdFile": "${env:PICO_SDK_PATH}/src/rp2040/hardware_regs/rp2040.svd",
-            "runToMain": true,
-            // Work around for stopping at main on restart
-            "postRestartCommands": [
-                "break main",
-                "continue"
-            ]
+            "runToEntryPoint": "main",
         }
     ]
 }
