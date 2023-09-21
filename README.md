@@ -29,7 +29,7 @@ make -j 4
 
 ## Usage
 
-By default the uart config is `UART_0` with `pin_0 = tx` and `pin_1 = rx`.
+By default the uart config is `UART_0` with `tx = GP0` and `rx = GP1`.
 
 > NOTE: UART configuration and Debug information can be configured in the apps [CMakeLists.txt](./app/CMakeLists.txt)
 
