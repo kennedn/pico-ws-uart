@@ -63,7 +63,7 @@ int main() {
 
   while (1) {
     // Check WiFI status periodically
-    if(cyw43_wifi_link_status(&cyw43_state, CYW43_ITF_STA) < 0 && (to_ms_since_boot(get_absolute_time()) - sw_timer) > WIFI_STATUS_POLL_MS) {
+    if(cyw43_wifi_link_status(&cyw43_state, CYW43_ITF_STA) <= 0 && (to_ms_since_boot(get_absolute_time()) - sw_timer) > WIFI_STATUS_POLL_MS) {
       cyw43_arch_wifi_connect_async(WIFI_SSID, WIFI_PASSWORD, CYW43_AUTH_WPA2_AES_PSK);
       sw_timer = to_ms_since_boot(get_absolute_time());
     }

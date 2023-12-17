@@ -8,10 +8,10 @@ set(CMAKE_CXX_STANDARD 17)
 add_library(lwipopts_provider INTERFACE)
 target_include_directories(lwipopts_provider INTERFACE ${CMAKE_CURRENT_LIST_DIR}/include)
 target_compile_definitions(lwipopts_provider INTERFACE
-  # CYW43_HOST_NAME=\"LG_TV\"
+  CYW43_HOST_NAME=\"LG_TV\"
   PICO_WS_SERVER_STATIC_HTML_HEX=\"${PICO_WS_SERVER_STATIC_HTML_HEX}\"
-  ENABLE_DEBUG=1      # pico-ws-server enable debug logging
-  # NDEBUG=1          # LWIP disable debug logging
+  # ENABLE_DEBUG=1      # pico-ws-server enable debug logging
+  NDEBUG=1          # LWIP disable debug logging
 )
 
 add_executable(pico-ws-uart
@@ -37,7 +37,7 @@ target_compile_definitions(pico-ws-uart PRIVATE
   CONTROL_CHAR=\'x\'          # When set, pollForData will wait for a control character before firing 
                               # When unset, pollForData will fire immediatly after all data is read from UART
   WIFI_STATUS_POLL_MS=10000   # How often to check wifi is still connected
-  ENABLE_DEBUG=1              # pico-ws-uart enable debug logging
+  # ENABLE_DEBUG=1              # pico-ws-uart enable debug logging
   )
 
 pico_add_extra_outputs(pico-ws-uart)
