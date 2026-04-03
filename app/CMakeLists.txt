@@ -36,6 +36,7 @@ target_compile_definitions(pico-ws-uart PRIVATE
   RX_BUFFER_SIZE=32           # Maximum UART RX message size
   CONTROL_CHAR=\'x\'          # When set, pollForData will wait for a control character before firing 
                               # When unset, pollForData will fire immediatly after all data is read from UART
+  WATCHDOG_MS=10000           # Watchdog timeout in milliseconds
   WIFI_STATUS_POLL_MS=10000   # How often to check wifi is still connected
   # ENABLE_DEBUG=1              # pico-ws-uart enable debug logging
   )

@@ -2,6 +2,7 @@
 #include "pico/stdlib.h"
 #include "pico/cyw43_arch.h"
 #include "pico_ws_server/web_socket_server.h"
+#include "hardware/watchdog.h"
 #include "uart_rx.h"
 #include "debug.h"
 
@@ -19,6 +20,7 @@ void on_disconnect(WebSocketServer& server, uint32_t conn_id) {
 }
 
 void on_message(WebSocketServer& server, uint32_t conn_id, const void* data, size_t len) {
+  DEBUG("WebSocket message received: %.*s", (int)len, (const char*)data);
   for(size_t i=0; i < len; i++) {
     uart.putc(*((char*)data + i));
   }
@@ -41,7 +43,7 @@ int main() {
   cyw43_arch_enable_sta_mode();
 
   DEBUG("Connecting to Wi-Fi...");
-  do {} while(cyw43_arch_wifi_connect_timeout_ms(WIFI_SSID, WIFI_PASSWORD, CYW43_AUTH_WPA2_AES_PSK, 30000));
+  do {} while(cyw43_arch_wifi_connect_timeout_ms(WIFI_SSID, WIFI_PASSWORD, CYW43_AUTH_WPA2_AES_PSK, WIFI_STATUS_POLL_MS));
   DEBUG("Connected.");
 
 
@@ -60,15 +62,22 @@ int main() {
   uart.enable();
   
   DEBUG("UART interface started");
-
+  watchdog_enable(WATCHDOG_MS, 1);
   while (1) {
     // Check WiFI status periodically
-    if(cyw43_wifi_link_status(&cyw43_state, CYW43_ITF_STA) <= 0 && (to_ms_since_boot(get_absolute_time()) - sw_timer) > WIFI_STATUS_POLL_MS) {
-      cyw43_arch_wifi_connect_async(WIFI_SSID, WIFI_PASSWORD, CYW43_AUTH_WPA2_AES_PSK);
-      sw_timer = to_ms_since_boot(get_absolute_time());
+    uint32_t now = to_ms_since_boot(get_absolute_time());
+    if ((now - sw_timer) > WIFI_STATUS_POLL_MS) {
+      sw_timer = now;
+      if(cyw43_wifi_link_status(&cyw43_state, CYW43_ITF_STA) <= 0) {
+        // Just reboot if we need to reconnect to Wi-Fi, cyw43_state may be disassociated in we ever received a DEAUTH from router
+        DEBUG("Wi-Fi link lost, rebooting");
+        watchdog_reboot(0, 0, 0);
+        while (1) tight_loop_contents();
+      }
     }
     cyw43_arch_poll();
     // Check for UART data periodically, this will fire the UARTCallback when data exists
     uart.pollForData();
+    watchdog_update();
   }
 }
