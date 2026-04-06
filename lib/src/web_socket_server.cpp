@@ -43,6 +43,10 @@ bool WebSocketServer::broadcastMessage(const void* payload, size_t payload_size)
   return internal->broadcastMessage(payload, payload_size);
 }
 
+uint32_t WebSocketServer::getConnectionCount() {
+  return internal->getConnectionCount();
+}
+
 bool WebSocketServer::close(uint32_t conn_id) {
   return internal->close(conn_id);
 }

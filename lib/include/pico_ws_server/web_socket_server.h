@@ -35,6 +35,8 @@ class WebSocketServer {
   // Send a BINARY message to all connections
   bool broadcastMessage(const void* payload, size_t payload_size);
 
+  uint32_t getConnectionCount();
+
   // Begin closing the specified connection.
   // Note: it is still possible for messages to be received on a closing connection,
   // but no further messages may be sent.

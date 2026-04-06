@@ -32,13 +32,13 @@ target_compile_definitions(pico-ws-uart PRIVATE
   PICO_DEFAULT_UART_BAUD_RATE=9600
   WIFI_SSID=\"${WIFI_SSID}\"
   WIFI_PASSWORD=\"${WIFI_PASSWORD}\"
-  MAX_WS_CONNECTIONS=2
+  MAX_WS_CONNECTIONS=4
   RX_BUFFER_SIZE=32           # Maximum UART RX message size
   CONTROL_CHAR=\'x\'          # When set, pollForData will wait for a control character before firing 
                               # When unset, pollForData will fire immediatly after all data is read from UART
-  WATCHDOG_MS=10000           # Watchdog timeout in milliseconds
-  WIFI_STATUS_POLL_MS=10000   # How often to check wifi is still connected
-  # ENABLE_DEBUG=1              # pico-ws-uart enable debug logging
+  WATCHDOG_MS=3*60*1000       # Watchdog timeout in milliseconds
+  WIFI_STATUS_POLL_MS=30000   # How often to check wifi is still connected
+  # ENABLE_DEBUG=1            # pico-ws-uart enable debug logging
   )
 
 pico_add_extra_outputs(pico-ws-uart)

@@ -280,6 +280,10 @@ uint32_t WebSocketServerInternal::getConnectionId(ClientConnection* connection) 
   return (uint32_t)connection;
 }
 
+uint32_t WebSocketServerInternal::getConnectionCount() {
+  return connection_by_id.size();
+}
+
 ClientConnection* WebSocketServerInternal::getConnectionById(uint32_t conn_id) {
   auto iter = connection_by_id.find(conn_id);
   if (iter == connection_by_id.end()) {
